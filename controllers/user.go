@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/swag/example/celler/httputil"
 )
 
 type CreateUserInput struct {
@@ -44,11 +45,21 @@ func FindUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
+// ShowAccount godoc
+// @Summary      Find by id
+// @Description  get by id
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "User ID"
+// @Success      200  {object}  models.User
+// @Failure      400  {object}  httputil.HTTPError
+// @Router       /users/{id} [get]
 func FindUser(c *gin.Context) {
 	var user models.User
 
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		httputil.NewError(c, http.StatusBadRequest, err)
 		return
 	}
 

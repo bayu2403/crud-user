@@ -36,7 +36,7 @@ func main() {
 
 	v1 := route.Group("/v1")
 	{
-		v1.GET("/v1/ping", func(context *gin.Context) {
+		v1.GET("/ping", func(context *gin.Context) {
 			context.JSON(http.StatusOK, gin.H{
 				"message": "pong",
 			})
