@@ -8,13 +8,13 @@ import (
 
 // swagger:model User
 type User struct {
-	ID          uint           `json:"id" gorm:"primaryKey"`
-	Name        string         `json:"name"`
-	Email       string         `json:"email"`
-	Address     string         `json:"address"`
-	Age         int8           `json:"age"`
-	PhoneNumber string         `json:"phoneNumber"`
-	CreatedAt   time.Time      `json:"createdAt"`
-	UpdatedAt   time.Time      `json:"updatedAt"`
+	ID          uint           `json:"id" gorm:"primaryKey" example:"1"`
+	Name        string         `json:"name" example:"testName"`
+	Email       string         `json:"email" example:"testName@gmail.com"`
+	Address     string         `json:"address" example:"purworejo, jawa tengah, indonesia"`
+	Age         int8           `json:"age" example:"24"`
+	PhoneNumber string         `json:"phoneNumber" example:"+6286566783401"`
+	CreatedAt   time.Time      `json:"createdAt" example:"2024-07-10T04:24:55.405915+07:00"`
+	UpdatedAt   time.Time      `json:"updatedAt" example:"2024-07-10T04:24:55.405915+07:00"`
 	DeletedAt   gorm.DeletedAt `json:"deletedAt"`
 }

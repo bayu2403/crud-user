@@ -23,7 +23,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users": {
+        "/v1/users": {
             "get": {
                 "description": "find all user",
                 "consumes": [
@@ -40,13 +40,54 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "create user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create user",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.CreateUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
                             "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
                         }
                     }
                 }
             }
         },
-        "/users/{id}": {
+        "/v1/users/{id}": {
             "get": {
                 "description": "get by id",
                 "consumes": [
@@ -75,6 +116,87 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.User"
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "update user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UpdateUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -86,6 +208,67 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.CreateUserInput": {
+            "type": "object",
+            "required": [
+                "address",
+                "age",
+                "email",
+                "name",
+                "phoneNumber"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "purworejo, jawa tengah, indonesia"
+                },
+                "age": {
+                    "type": "integer",
+                    "example": 24
+                },
+                "email": {
+                    "description": "Check if it's email",
+                    "type": "string",
+                    "example": "testName@gmail.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "testName"
+                },
+                "phoneNumber": {
+                    "description": "Check if it's phoneNumber",
+                    "type": "string",
+                    "example": "+6285155678965"
+                }
+            }
+        },
+        "controllers.UpdateUserInput": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "purworejo, jawa tengah, indonesia"
+                },
+                "age": {
+                    "type": "integer",
+                    "example": 24
+                },
+                "email": {
+                    "description": "Check if it's email",
+                    "type": "string",
+                    "example": "testName@gmail.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "testName"
+                },
+                "phoneNumber": {
+                    "description": "Check if it's phoneNumber",
+                    "type": "string",
+                    "example": "+6285155678965"
+                }
+            }
+        },
         "gorm.DeletedAt": {
             "type": "object",
             "properties": {
@@ -115,31 +298,39 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "address": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "purworejo, jawa tengah, indonesia"
                 },
                 "age": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 24
                 },
                 "createdAt": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2024-07-10T04:24:55.405915+07:00"
                 },
                 "deletedAt": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "testName@gmail.com"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "testName"
                 },
                 "phoneNumber": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "+6286566783401"
                 },
                 "updatedAt": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2024-07-10T04:24:55.405915+07:00"
                 }
             }
         }

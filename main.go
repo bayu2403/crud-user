@@ -8,6 +8,8 @@ import (
 	"crud/user/docs"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -28,9 +30,14 @@ func main() {
 	docs.SwaggerInfo.Description = "This is a CRUD User."
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Host = "localhost:8080"
-	docs.SwaggerInfo.BasePath = "/v1"
+	docs.SwaggerInfo.BasePath = ""
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	route := gin.Default()
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("email", controllers.ValidateEmail)
+		v.RegisterValidation("e164", controllers.ValidatePhoneNumber)
+	}
 
 	models.ConnectDatabase()
 

@@ -1,4 +1,50 @@
 definitions:
+  controllers.CreateUserInput:
+    properties:
+      address:
+        example: purworejo, jawa tengah, indonesia
+        type: string
+      age:
+        example: 24
+        type: integer
+      email:
+        description: Check if it's email
+        example: testName@gmail.com
+        type: string
+      name:
+        example: testName
+        type: string
+      phoneNumber:
+        description: Check if it's phoneNumber
+        example: "+6285155678965"
+        type: string
+    required:
+    - address
+    - age
+    - email
+    - name
+    - phoneNumber
+    type: object
+  controllers.UpdateUserInput:
+    properties:
+      address:
+        example: purworejo, jawa tengah, indonesia
+        type: string
+      age:
+        example: 24
+        type: integer
+      email:
+        description: Check if it's email
+        example: testName@gmail.com
+        type: string
+      name:
+        example: testName
+        type: string
+      phoneNumber:
+        description: Check if it's phoneNumber
+        example: "+6285155678965"
+        type: string
+    type: object
   gorm.DeletedAt:
     properties:
       time:
@@ -19,22 +65,30 @@ definitions:
   models.User:
     properties:
       address:
+        example: purworejo, jawa tengah, indonesia
         type: string
       age:
+        example: 24
         type: integer
       createdAt:
+        example: "2024-07-10T04:24:55.405915+07:00"
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
       email:
+        example: testName@gmail.com
         type: string
       id:
+        example: 1
         type: integer
       name:
+        example: testName
         type: string
       phoneNumber:
+        example: "+6286566783401"
         type: string
       updatedAt:
+        example: "2024-07-10T04:24:55.405915+07:00"
         type: string
     type: object
 info:
@@ -46,7 +100,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 paths:
-  /users:
+  /v1/users:
     get:
       consumes:
       - application/json
@@ -57,15 +111,42 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
       summary: Find All User where not deleted and sorted by created_at
       tags:
       - users
-  /users/{id}:
-    get:
+    post:
       consumes:
       - application/json
-      description: get by id
+      description: create user
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Create user
+      tags:
+      - users
+  /v1/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user
       parameters:
       - description: User ID
         in: path
@@ -83,7 +164,61 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/httputil.HTTPError'
+      summary: Delete user
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: get by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
       summary: Find by id
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: update user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Update user
       tags:
       - users
 swagger: "2.0"
