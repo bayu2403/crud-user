@@ -1,5 +1,10 @@
 ## How to:
 
+Install Golang
+```
+https://go.dev/doc/install
+```
+
 Run docker 1st
 ```
 docker compose up
