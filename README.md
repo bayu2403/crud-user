@@ -24,3 +24,8 @@ Run go
 ```
 go run main.go
 ```
+
+Run unit test
+```
+go test ./... -v -cover
+```
